@@ -1,0 +1,68 @@
+import random
+import requests
+
+
+# Used the Star Wars API which include statistics on the height and mass of 82 characters
+def random_character():
+    starwars_people = random.randint(1, 82)
+    url = 'https://swapi.dev/api/people/{}'.format(starwars_people)
+    response = requests.get(url)
+    character = response.json()
+
+    return {
+        'name': character['name'],
+        'height': character['height'],
+        'mass': character['mass'],
+    }
+
+
+def run():
+
+    win_stat = 0
+    lost_stat = 0
+# Add while loop to allow user to keep playing the game
+    while True:
+        my_character = random_character()
+        print('Hi. You are {}'. format(my_character['name']))
+        stat_choice = input('What would you like to find out? (height, mass) ')
+        opponent_character = random_character()
+        print('Your opponent is {}'.format(opponent_character['name']))
+        my_stat = my_character[stat_choice]
+        opponent_stat = opponent_character[stat_choice]
+# Added a win_stat which increments the number by 1 everytime the user beats the opponent
+# Print the number of times that the user has won so far
+        if my_stat > opponent_stat:
+            win_stat += 1
+            print('Yay! You won this round!')
+            print('Number of times you have won: {}'.format(win_stat))
+            print('Number of times you have lost: {}'.format(lost_stat))
+# Added a lost_stat which increments the number by 1 everytime the user is defeated
+# Print the number of times that users lost so far
+        elif opponent_stat > my_stat:
+            lost_stat += 1
+            print('You lose! Better luck next time.')
+            print('Number of times you have been defeated: {}'.format(lost_stat))
+            print('Number of times you have won: {}'.format(win_stat))
+        else:
+            print('Draw!')
+# Ask if users would like to take a break. If they enter "Y", it will print the stat and terminates the programme
+        if win_stat == 5 or lost_stat == 5:
+            take_break = input("Would you like to take a break? Press [Y] to take a break or press any other key to continue ")
+            if take_break == "Y" or take_break == "y":
+                print('Time to take a break')
+                print('Here is your stat so far')
+                print('Number of wins: {}'.format(win_stat))
+                print('Number of loses: {}'.format(lost_stat))
+                print('Bye and have a nice day')
+                break
+            else:
+                print("Let's continue the game")
+                continue
+# When the user wins or loses for 10 times, the programme will print the user's stats and the programme will stop running 
+        if win_stat == 10 or lost_stat == 10:
+            print('Game over. Here is your stats so far')
+            print('Number of wins: {}'.format(win_stat))
+            print('Number of loses: {}'.format(lost_stat))
+            print('We hope that it has been fun so far.')
+            break
+run()
